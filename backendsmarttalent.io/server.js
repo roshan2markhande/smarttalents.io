@@ -8,6 +8,9 @@ app.use(express.json());
 connectDB();
 
 
+//router stitch
+const companyRouter=require('./routes/companyRoute')
+app.use('/register',companyRouter)
 
 app.listen(process.env.PORT,()=>{
     console.info('Server is connected at port no.'+process.env.PORT);

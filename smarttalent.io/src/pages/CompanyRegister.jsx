@@ -6,7 +6,7 @@ export default function CompanyRegister() {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    password: "",
+    passwordHash: "",
     logo: null,
   });
 
@@ -29,7 +29,7 @@ export default function CompanyRegister() {
       const formData = new FormData();
       formData.append("name", form.name);
       formData.append("email", form.email);
-      formData.append("password", form.password);
+      formData.append("passwordHash", form.passwordHash);
       if (form.logo) {
         formData.append("logo", form.logo);
       }
@@ -41,7 +41,7 @@ export default function CompanyRegister() {
       setError("Registration failed. Please check your inputs.");
     }
   };
-
+//name, email, passwordHash, branding 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
@@ -81,7 +81,7 @@ export default function CompanyRegister() {
           <label className="block mb-1 font-medium">Password</label>
           <input
             type="password"
-            name="password"
+            name="passwordHash"
             value={form.password}
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded"

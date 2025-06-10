@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const companyRegister = async (req, res) => {
     try {
+        console.log(req);
         const { name, email, passwordHash, branding } = req.body;
         const chkExist = await company.find({ email: email })
         if (chkExist) {
@@ -31,13 +32,13 @@ const companyLogin = async (req, res) => {
             res.status(500).json({ message: "Company is not present please register first" })
         }
 
-        bcrypt.compare(passwordHash, chkExist.passwordHash, function(err, result) {
-        const chkPassword=result;
+        bcrypt.compare(passwordHash, chkExist.passwordHash, function (err, result) {
+            const chkPassword = result;
         });
         if (!result) {
-              res.status(500).json({ message: "Wrong Password " })   
-        }else{
-             res.status(200).json({ message: "Login Sucess " })   
+            res.status(500).json({ message: "Wrong Password " })
+        } else {
+            res.status(200).json({ message: "Login Sucess " })
         }
 
         jwt.sign({ email: chkExist.email }, process.env.PRIVATE_KEY, { algorithm: 'RS256' }, function (err, token) {

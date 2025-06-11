@@ -7,7 +7,7 @@ export default function CompanyRegister() {
     name: "",
     email: "",
     passwordHash: "",
-    logo: null,
+    logo: null, // Not handled yet
   });
 
   const navigate = useNavigate();
@@ -33,15 +33,29 @@ export default function CompanyRegister() {
       if (form.logo) {
         formData.append("logo", form.logo);
       }
+      formData.append("branding[primaryColor]", "#1e2a38");
+      formData.append("branding[secondaryColor]", "#2e3a49");
+      formData.append("branding[fontFamily]", "Arial, sans-serif");
 
-      const res = await axios.post("http://localhost:5000/api/company/register", formData);
+      console.log(formData);
+      const res = await axios.post(
+        "http://localhost:5000/api/company/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       localStorage.setItem("companyToken", res.data.token);
       navigate("/company/dashboard");
     } catch (err) {
+      console.error(err);
       setError("Registration failed. Please check your inputs.");
     }
   };
-//name, email, passwordHash, branding 
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
@@ -82,7 +96,7 @@ export default function CompanyRegister() {
           <input
             type="password"
             name="passwordHash"
-            value={form.password}
+            value={form.passwordHash}
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded"
             required

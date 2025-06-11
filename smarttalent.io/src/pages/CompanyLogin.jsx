@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default function CompanyLogin() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [passwordHash, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function CompanyLogin() {
     try {
       const res = await axios.post("http://localhost:5000/api/company/login", {
         email,
-        password,
+        passwordHash,
       });
 
       // Save token or company data if needed
@@ -41,6 +41,7 @@ export default function CompanyLogin() {
           <label className="block mb-1 font-medium">Email</label>
           <input
             type="email"
+            name="email"
             className="w-full border px-3 py-2 rounded"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -52,8 +53,9 @@ export default function CompanyLogin() {
           <label className="block mb-1 font-medium">Password</label>
           <input
             type="password"
+            name="passwordHash"
             className="w-full border px-3 py-2 rounded"
-            value={password}
+            value={passwordHash}
             onChange={(e) => setPassword(e.target.value)}
             required
           />

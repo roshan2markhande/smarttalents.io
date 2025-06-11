@@ -1,55 +1,63 @@
-const company = require('../models/companyModel');
+const Company = require('../models/companyModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const companyRegister = async (req, res) => {
     try {
-        console.log(req);
         const { name, email, passwordHash, branding } = req.body;
-        const chkExist = await company.find({ email: email })
-        if (chkExist) {
-            res.status(500).json({ message: "Company is already present" })
+
+        // Check if company already exists
+        const existingCompany = await Company.findOne({ email });
+        if (existingCompany) {
+            return res.status(400).json({ message: "Company already registered" });
         }
+
+        // Hash password
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(passwordHash, salt);
-        var myobj = { name: name, email: email, passwordHash: hash, branding: branding };
-        dbo.company.insertOne(myobj, function (err, res) {
-            if (err) throw err;
-            console.log("1 document inserted");
+
+        // Create company
+        const newCompany = new Company({
+            name,
+            email,
+            passwordHash: hash,
+            branding
         });
 
+        await newCompany.save();
+        res.status(201).json({ message: "Company registered successfully" });
+
     } catch (err) {
-        console.log('Error While Registring user', err)
+        console.error("Error during registration:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
+};
 
-
-}
 const companyLogin = async (req, res) => {
     try {
         const { email, passwordHash } = req.body;
-        const chkExist = await company.find({ email: email })
-        if (!chkExist) {
-            res.status(500).json({ message: "Company is not present please register first" })
+
+        const existingCompany = await Company.findOne({ email });
+        if (!existingCompany) {
+            return res.status(400).json({ message: "Company not found. Please register first." });
         }
 
-        bcrypt.compare(passwordHash, chkExist.passwordHash, function (err, result) {
-            const chkPassword = result;
-        });
-        if (!result) {
-            res.status(500).json({ message: "Wrong Password " })
-        } else {
-            res.status(200).json({ message: "Login Sucess " })
+const passwordMatch = await bcrypt.compare(passwordHash, existingCompany.passwordHash);
+         if (!passwordMatch) {
+            return res.status(401).json({ message: "Incorrect password" });
         }
+        const token = jwt.sign(
+            { email: existingCompany.email, id: existingCompany._id },
+            process.env.PRIVATE_KEY,
+            { algorithm: 'HS256', expiresIn: '1h' } 
+        );
 
-        jwt.sign({ email: chkExist.email }, process.env.PRIVATE_KEY, { algorithm: 'RS256' }, function (err, token) {
-            console.log(token);
-        });
+        res.status(200).json({ message: "Login successful", token });
 
     } catch (err) {
-        console.log('Error While Registring user', err)
+        console.error("Error during login:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
+};
 
-
-}
-
-module.exports = { companyRegister, companyLogin }
+module.exports = { companyRegister, companyLogin };

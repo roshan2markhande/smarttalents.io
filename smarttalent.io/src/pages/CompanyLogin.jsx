@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Eye, EyeOff, Moon, Sun , Linkedin } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import loginImage from "../assets/Ordercomplete.gif"; // ✅ fixed image import
+import loginImage from "../assets/login-gif.gif"; // ✅ fixed image import
 import { FcGoogle } from "react-icons/fc";
 export default function CompanyLogin() {
   const [email, setEmail] = useState("");

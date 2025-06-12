@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Rocket, BriefcaseBusiness, ShieldCheck, Users, Bot } from "lucide-react";
-
+import homeImage from  "../assets/ai-recruitment.jpg";
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-100 text-gray-800">
@@ -38,7 +38,7 @@ export default function Home() {
 
           <div className="lg:w-1/2 mb-10 lg:mb-0">
             <motion.img
-              src="/assets/ai-recruitment.svg"
+              src={homeImage}
               alt="AI Recruitment"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}

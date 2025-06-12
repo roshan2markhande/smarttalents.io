@@ -42,14 +42,14 @@ const companyLogin = async (req, res) => {
             return res.status(400).json({ message: "Company not found. Please register first." });
         }
 
-const passwordMatch = await bcrypt.compare(passwordHash, existingCompany.passwordHash);
-         if (!passwordMatch) {
+        const passwordMatch = await bcrypt.compare(passwordHash, existingCompany.passwordHash);
+        if (!passwordMatch) {
             return res.status(401).json({ message: "Incorrect password" });
         }
         const token = jwt.sign(
             { email: existingCompany.email, id: existingCompany._id },
             process.env.PRIVATE_KEY,
-            { algorithm: 'HS256', expiresIn: '1h' } 
+            { algorithm: 'HS256', expiresIn: '1h' }
         );
 
         res.status(200).json({ message: "Login successful", token });
